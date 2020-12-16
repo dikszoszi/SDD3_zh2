@@ -18,17 +18,17 @@ namespace HandballTeams
 
         private static void ProcessXmls(PlayerContext ctx)
         {
-            XDocument englishTeam = TeamGenerator.GenerateTeam(28, "EN");
-            XDocument hungarianTeam = TeamGenerator.GenerateTeam(40, "HU");
-            XDocument frenchTeam = TeamGenerator.GenerateTeam(2, "FR");
+            XDocument teamEN = TeamGenerator.GenerateTeam(28, "EN");
+            XDocument teamHU = TeamGenerator.GenerateTeam(40, "HU");
+            XDocument teamFR = TeamGenerator.GenerateTeam(2, "FR");
 
-            englishTeam.Save(nameof(englishTeam) + ".xml");
-            hungarianTeam.Save(nameof(hungarianTeam) + ".xml");
-            frenchTeam.Save(nameof(frenchTeam) + ".xml");
+            teamEN.Save(nameof(teamEN) + ".xml");
+            teamHU.Save(nameof(teamHU) + ".xml");
+            teamFR.Save(nameof(teamFR) + ".xml");
 
-            IEnumerable<XElement> allPlayers = englishTeam.Root.Elements("player")
-                .Union(hungarianTeam.Root.Elements("player"))
-                .Union(frenchTeam.Root.Elements("player"));
+            IEnumerable<XElement> allPlayers = teamEN.Root.Elements("player")
+                .Concat(teamHU.Root.Elements("player"))
+                .Concat(teamFR.Root.Elements("player"));
 
             IEnumerable<Player> players = allPlayers.Select(playerElement => Player.CreateFromNode(playerElement));
 
@@ -74,14 +74,14 @@ namespace HandballTeams
                 .Join(q4, grouptype => grouptype.Max, query => query.Sum, (grp, query) => new { grp.Pos, grp.Max, query });
             q5.PrintToConsole("Q5"); //5. For every position, the most expensive post-pair
 
-            XDocument q2Results = new XDocument(new XElement("Results"));
+            XDocument teamQ2result = new XDocument(new XElement("Results"));
             foreach (var item in q2)
             {
-                q2Results.Root.Add(new XElement("Position", new XAttribute("name", item.Position),
+                teamQ2result.Root.Add(new XElement("Position", new XAttribute("name", item.Position),
                     new XElement("avg", item.Average),
                     new XElement("max", item.Maximum)));
             }
-            q2Results.Save(nameof(q2Results) + ".xml");
+            teamQ2result.Save(nameof(teamQ2result) + ".xml");
         }
     }
 }

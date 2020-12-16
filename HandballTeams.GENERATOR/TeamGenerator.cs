@@ -20,19 +20,13 @@ namespace HandballTeams.GENERATOR
         public static XDocument GenerateTeam(int num, string lang)
         {
             XDocument output = new XDocument(new XElement("players"));
-
+            KeyValuePair<string, string[]> kvp = new KeyValuePair<string, string[]>(lang, nodes[lang]);
             for (int i = 0; i < num; i++)
             {
-                foreach (var item in nodes)
-                {
-                    if (item.Key == lang)
-                    {
-                        output.Root.Add(new XElement("player", new XAttribute("lang", item.Key),
-                            new XElement(item.Value[0], firstNames[rnd.Next(familyNames.Length)]),
-                            new XElement(item.Value[1], familyNames[rnd.Next(firstNames.Length)]),
-                            new XElement(item.Value[2], positions[rnd.Next(positions.Length)])));
-                    }
-                }
+                output.Root.Add(new XElement("player", new XAttribute("lang", kvp.Key),
+                    new XElement(kvp.Value[0], firstNames[rnd.Next(familyNames.Length)]),
+                    new XElement(kvp.Value[1], familyNames[rnd.Next(firstNames.Length)]),
+                    new XElement(kvp.Value[2], positions[rnd.Next(positions.Length)])));
             }
             return output;
         }
