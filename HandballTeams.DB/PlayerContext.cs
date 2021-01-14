@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+[assembly: System.CLSCompliant(false)]
 namespace HandballTeams.DB
 {
     public partial class PlayerContext : DbContext
@@ -13,6 +14,7 @@ namespace HandballTeams.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (optionsBuilder is null) throw new System.ArgumentNullException(nameof(optionsBuilder));
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseLazyLoadingProxies()
@@ -22,6 +24,7 @@ namespace HandballTeams.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            if (modelBuilder is null) throw new System.ArgumentNullException(nameof(modelBuilder));
             Player player = new Player
             {
                 Id = 1,

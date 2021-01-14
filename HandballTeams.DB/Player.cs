@@ -63,7 +63,7 @@ namespace HandballTeams.DB
 
         public override string ToString()
         {
-            return $"[ #{this.Id} | {(this.FamilyName).ToUpper()}, {this.FirstName} | {this.Position} | {this.Salary:N} ]";
+            return $"[ #{this.Id} | {(this.FamilyName).ToUpperInvariant()}, {this.FirstName} | {this.Position} | {this.Salary:N} ]";
         }
     }
 }

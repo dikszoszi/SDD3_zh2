@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
 
+[assembly: System.CLSCompliant(false)]
 namespace HandballTeams.GENERATOR
 {
-    public class TeamGenerator
+    public static class TeamGenerator
     {
         private static readonly Random rnd = new Random();
         private static readonly string[] familyNames = { "Szucsánszki", "Schatzl", "Márton", "Kovacsics", "Háfra", "Klujber", "Bíró" };
