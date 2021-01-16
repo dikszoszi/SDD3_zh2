@@ -10,11 +10,12 @@ namespace HandballTeams
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             PlayerContext ctx = new PlayerContext();
             ProcessXmls(ctx);
             QueryDatabase(ctx);
+            ctx.Dispose();
         }
 
         private static void ProcessXmls(PlayerContext ctx)
@@ -42,34 +43,33 @@ namespace HandballTeams
 
         private static void QueryDatabase(PlayerContext ctx)
         {
-            IQueryable<Player> p = ctx.Set<Player>();
-
             var q1 = new string[]
             {
-                "Number of players: " + p.Count(),
-                "Details of the first player: " + p.OrderBy(player => player.Id).First(),
-                "Details of the last player: " + p.OrderBy(player => player.Id).Last(),
+                "Number of players: " + ctx.Players.Count(),
+                "Details of the first player: " + ctx.Players.OrderBy(player => player.Id).First().ToString(),
+                "Details of the last player: " + ctx.Players.OrderBy(player => player.Id).Last().ToString(),
             };
             q1.PrintToConsole("Q1"); //1. The number of players, all data of the first and last players 
 
-            var groupbyPos = p.GroupBy(player => player.Position);
+            var groupbyPos = ctx.Players.GroupBy(player => player.Position);
 
-            var q2 = groupbyPos
-                .Select(grp => new
-                {
-                    Position = grp.Key,
-                    Average = (int)grp
-                .Average(player => player.Salary),
-                    Maximum = grp.Max(player => player.Salary)
-                });
+            var q2 = from grp in groupbyPos
+                     select new
+                     {
+                         Position = grp.Key,
+                         Average = grp.Average(player => player.Salary),
+                         Maximum = grp.Max(player => player.Salary)
+                     };
             q2.PrintToConsole("Q2"); //2. The maximum and the average salary for every position 
 
-            var q3 = groupbyPos
-                .Select(grp => new { Position = grp.Key, MaxSalary = grp.Max(player => player.Salary) })
-                .Join(p, group => group.MaxSalary, player => player.Salary, (group, player) => new { group.Position, group.MaxSalary, player });
-            q3.PrintToConsole("Q3"); //3. For every position, the players who earn the most 
-            var q4 = from p1 in p
-                     join p2 in p on p1.Position equals p2.Position
+            var q3 = from grp in groupbyPos
+                     let posMaxSal = new { Position = grp.Key, MaxSalary = grp.Max(player => player.Salary) }
+                     join player in ctx.Players on posMaxSal.MaxSalary equals player.Salary
+                     select new { posMaxSal.Position, posMaxSal.MaxSalary, player };
+            q3.PrintToConsole("Q3"); //3. For every position, the players who earn the most
+
+            var q4 = from p1 in ctx.Players
+                     join p2 in ctx.Players on p1.Position equals p2.Position
                      let playersSum = new { p1, p2, Sum = p1.Salary + p2.Salary }
                      where p1.Id < p2.Id && p1.Salary - p2.Salary < 1000
                      orderby playersSum.Sum descending
