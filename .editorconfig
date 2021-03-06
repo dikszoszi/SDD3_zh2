@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = suggestion
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = silent
+
+# CA5394: Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = silent

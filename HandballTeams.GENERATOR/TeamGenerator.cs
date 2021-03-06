@@ -7,11 +7,11 @@ namespace HandballTeams.GENERATOR
 {
     public static class TeamGenerator
     {
-        private static readonly Random rnd = new Random();
+        private static readonly Random rnd = new ();
         private static readonly string[] familyNames = { "Szucsánszki", "Schatzl", "Márton", "Kovacsics", "Háfra", "Klujber", "Bíró" };
         private static readonly string[] firstNames = { "Zita", "Nadine", "Gréta", "Anikó", "Noémi", "Katrin", "Blanka" };
         private static readonly string[] positions = { "RightWing", "LeftWing", "Pivot", "Centre", "Left Back", "Right Back", "Goalie" };
-        private static readonly Dictionary<string, string[]> nodes = new Dictionary<string, string[]>()
+        private static readonly Dictionary<string, string[]> nodes = new ()
         {
             { "EN", new string[] { "firstName", "familyName", "position" } },
             { "HU", new string[] { "keresztNev", "vezetekNev", "poszt" } },
@@ -20,8 +20,8 @@ namespace HandballTeams.GENERATOR
 
         public static XDocument GenerateTeam(int num, string lang)
         {
-            XDocument output = new XDocument(new XElement("players"));
-            KeyValuePair<string, string[]> kvp = new KeyValuePair<string, string[]>(lang, nodes[lang]);
+            XDocument output = new (new XElement("players"));
+            KeyValuePair<string, string[]> kvp = new (lang, nodes[lang]);
             for (int i = 0; i < num; i++)
             {
                 output.Root.Add(new XElement("player", new XAttribute("lang", kvp.Key),
